@@ -1,0 +1,66 @@
+version: '3.8'
+
+services:
+  # СЕРВИС БАЗЫ ДАННЫХ POSTGRESQL
+  db:
+    image: postgres:16-alpine
+    container_name: system_v1_db
+    environment:
+      POSTGRES_DB: system_v1_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres_secure_password
+    # Данные БД сохраняются в локальную скрытую папку на вашем ПК
+    volumes:
+      - .docker-data/postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d system_v1_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  # СЕРВИС REDIS (БРОКЕР ДЛЯ CELERY БИТ И ОЧЕРЕДЕЙ)
+  redis:
+    image: redis:7-alpine
+    container_name: system_v1_redis
+    ports:
+      - "6379:6379"
+
+  # ОСНОВНОЕ DJANGO ПРИЛОЖЕНИЕ (БЭКЕНД И WEB)
+  web:
+    build: .
+    container_name: system_v1_web
+    # Запускаем локальный сервер Django, считывая manage.py из src/
+    command: python src/manage.py runserver 0.0.0.0:8000
+    # Маппинг локальной папки src с папкой внутри контейнера для мгновенного обновления кода
+    volumes:
+      - ./src:/app/src
+    ports:
+      - "8000:8000"
+    environment:
+      - DATABASE_URL=postgres://postgres:postgres_secure_password@db:5432/system_v1_db
+      - REDIS_URL=redis://redis:6379/0
+      - SECRET_KEY=django-insecure-development-key-v1-0-change-me
+      - DEBUG=True
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_started
+
+  # ВОРКЕР CELERY ДЛЯ ФОНОВЫХ ЗАДАЧ (УВЕДОМЛЕНИЯ, СРОКИ)
+  celery_worker:
+    build: .
+    container_name: system_v1_celery
+    command: celery -A src.config.celery worker --loglevel=info
+    volumes:
+      - ./src:/app/src
+    environment:
+      - DATABASE_URL=postgres://postgres:postgres_secure_password@db:5432/system_v1_db
+      - REDIS_URL=redis://redis:6379/0
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_started
