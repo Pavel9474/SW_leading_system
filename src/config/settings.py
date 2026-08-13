@@ -36,6 +36,7 @@ INSTALLED_APPS = [
     'src.apps.projects.apps.ProjectsConfig',
     'src.apps.workflow.apps.WorkflowConfig',
     'src.apps.assignments.apps.AssignmentsConfig',
+    'src.apps.reporting.apps.ReportingConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
