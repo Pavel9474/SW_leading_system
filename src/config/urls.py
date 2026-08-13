@@ -15,9 +15,14 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import include, path
+from django.urls import path, include
+from django.views.generic import RedirectView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    # Подключаем модуль отчетности
     path('reporting/', include('src.apps.reporting.urls', namespace='reporting')),
+    
+    # КЛЮЧЕВОЕ ИСПРАВЛЕНИЕ: перенаправление с главной страницы на мониторинг нагрузки
+    path('', RedirectView.as_view(url='/reporting/department-load/', permanent=False)),
 ]

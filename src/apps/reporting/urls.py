@@ -8,4 +8,4 @@ urlpatterns = [
     path('department-load/', department_load_page, name='department_load_page'),
     
     # URL, к которому обращается HTMX при выборе элемента в селекторе
-    path('department-load-fragment/', department_load_fragment, name='department_load_fragment'),
+    path('department-load-fragment/', department_load_fragment, name='department_load_fragment'),]
