@@ -22,11 +22,11 @@ ALLOWED_HOSTS = ['*']
 
 INSTALLED_APPS = [
     'apps.accounts.apps.AccountsConfig',
-    'src.apps.organization.apps.OrganizationConfig',
-    'src.apps.projects.apps.ProjectsConfig',
-    'src.apps.workflow.apps.WorkflowConfig',
-    'src.apps.assignments.apps.AssignmentsConfig',
-    'src.apps.audit.apps.AuditConfig',
+    'apps.organization.apps.OrganizationConfig',
+    'apps.projects.apps.ProjectsConfig',
+    'apps.workflow.apps.WorkflowConfig',
+    'apps.assignments.apps.AssignmentsConfig',
+    'apps.audit.apps.AuditConfig',
     'apps.reporting.apps.ReportingConfig',
     'django.contrib.admin',
     'django.contrib.auth',

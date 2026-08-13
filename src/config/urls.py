@@ -22,6 +22,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     # Подключаем модуль отчетности
     path('reporting/', include('src.apps.reporting.urls', namespace='reporting')),
+    path('api/v1/', include('src.apps.audit.urls')),
     
     # КЛЮЧЕВОЕ ИСПРАВЛЕНИЕ: перенаправление с главной страницы на мониторинг нагрузки
     path('', RedirectView.as_view(url='/reporting/department-load/', permanent=False)),
