@@ -1,6 +1,6 @@
 from django.contrib.contenttypes.models import ContentType
-from src.apps.audit.models import AuditLog
-from src.apps.audit.tasks import async_write_audit_metadata
+from apps.audit.models import AuditLog
+from apps.audit.tasks import async_write_audit_metadata
 
 def log_action(
     *,

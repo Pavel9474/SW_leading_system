@@ -21,8 +21,10 @@ from django.views.generic import RedirectView
 urlpatterns = [
     path('admin/', admin.site.urls),
     # Подключаем модуль отчетности
-    path('reporting/', include('src.apps.reporting.urls', namespace='reporting')),
-    path('api/v1/', include('src.apps.audit.urls')),
+    path('reporting/', include('apps.reporting.urls', namespace='reporting')),
+    path('api/v1/', include('apps.audit.urls')),
+    path('api/v1/', include('apps.documents.urls')),
+    path('milestones/', include('apps.milestones.urls', namespace='milestones')),
     
     # КЛЮЧЕВОЕ ИСПРАВЛЕНИЕ: перенаправление с главной страницы на мониторинг нагрузки
     path('', RedirectView.as_view(url='/reporting/department-load/', permanent=False)),

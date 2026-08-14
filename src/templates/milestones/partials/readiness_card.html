@@ -1,0 +1,74 @@
+<div id="readiness-panel">
+    
+    {% if stage.status == 'completed' %}
+        <!-- ЭТАП УЖЕ ЗАКРЫТ -->
+        <div class="bg-blue-50 border-l-4 border-blue-500 p-6 rounded shadow-sm">
+            <h3 class="text-lg font-bold text-blue-800 flex items-center">
+                <svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                </svg>
+                Этап успешно закрыт
+            </h3>
+            <p class="text-blue-700 mt-2">Дата закрытия: <strong>{{ stage.closed_at|date:"d.m.Y H:i" }}</strong></p>
+            
+            {% if audit_log %}
+            <p class="text-sm text-blue-600 mt-1">Журнал аудита: {{ audit_log.id }}</p>
+            {% endif %}
+
+            <div class="mt-6">
+                <button disabled class="bg-gray-300 text-gray-500 font-bold py-2 px-4 rounded cursor-not-allowed">
+                    Действие выполнено
+                </button>
+            </div>
+        </div>
+
+    {% else %}
+        <!-- ЭТАП В ПРОЦЕССЕ: Проверка готовности -->
+        <div class="bg-white shadow rounded-lg p-6 border-t-4 {% if readiness.is_perfect %}border-green-500{% else %}border-yellow-500{% endif %}">
+            
+            <h3 class="text-lg font-bold mb-4 {% if readiness.is_perfect %}text-green-700{% else %}text-yellow-700{% endif %}">
+                Анализ блокирующего аудита
+            </h3>
+
+            {% if readiness.is_perfect %}
+                <div class="flex items-center text-green-600 bg-green-50 p-4 rounded">
+                    <svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                    <span>Этап полностью готов к закрытию, хвостов не обнаружено.</span>
+                </div>
+            {% else %}
+                <div class="bg-yellow-50 p-4 rounded text-yellow-800">
+                    <p class="font-medium mb-2">Обнаружены незавершенные процессы:</p>
+                    <ul class="list-disc pl-5 space-y-1 text-sm">
+                        {% if readiness.uncompleted_outputs_count > 0 %}
+                            <li>Незавершенных выходов: <strong>{{ readiness.uncompleted_outputs_count }}</strong></li>
+                        {% endif %}
+                        
+                        {% if readiness.uncompleted_orders_count > 0 %}
+                            <li>Зависших поручений: <strong>{{ readiness.uncompleted_orders_count }}</strong></li>
+                        {% endif %}
+                        
+                        {% if readiness.missing_documents_outputs %}
+                            <li>Выходов без прикрепленных документов: <strong>{{ readiness.missing_documents_outputs|length }}</strong></li>
+                        {% endif %}
+                    </ul>
+                    <p class="text-xs text-yellow-600 mt-3 italic">
+                        * Согласно регламенту, вы можете принудительно закрыть этап. Текущий статус "хвостов" будет зафиксирован в аудите.
+                    </p>
+                </div>
+            {% endif %}
+
+            <!-- Форма отправки с HTMX -->
+            <form class="mt-6" 
+                  hx-post="{% url 'milestones:close_stage_action' stage.id %}"
+                  hx-target="#readiness-panel"
+                  hx-swap="outerHTML"
+                  hx-confirm="Вы уверены, что хотите закрыть этот этап? Изменение статуса будет сохранено в AuditLog.">
+                {% csrf_token %}
+                <button type="submit" 
+                        class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-6 rounded transition duration-150 ease-in-out">
+                    {% if readiness.is_perfect %}Утвердить закрытие этапа{% else %}Закрыть этап с фиксацией хвостов{% endif %}
+                </button>
+            </form>
+        </div>
+    {% endif %}
+</div>

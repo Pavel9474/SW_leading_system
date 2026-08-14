@@ -2,9 +2,9 @@ from rest_framework import viewsets, status
 from rest_framework.response import Response
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.decorators import action
-from src.apps.audit.serializers import AuditLogSerializer
-from src.apps.audit.selectors import audit_selector
-from src.apps.audit.permissions import CanViewAuditLogsPermission
+from apps.audit.serializers import AuditLogSerializer
+from apps.audit.selectors import audit_selector
+from apps.audit.permissions import CanViewAuditLogsPermission
 
 
 class AuditPagination(PageNumberPagination):

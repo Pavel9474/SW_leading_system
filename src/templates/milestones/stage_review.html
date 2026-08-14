@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Верификация этапа</title>
+    <!-- Подключение Tailwind и HTMX для автономной работы страницы -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/htmx.org@1.9.10"></script>
+</head>
+<body class="bg-gray-50 min-h-screen p-8">
+
+<div class="max-w-4xl mx-auto">
+    <!-- Заголовок -->
+    <div class="mb-8">
+        <h1 class="text-3xl font-bold text-gray-900">Закрытие этапа проекта</h1>
+        <p class="text-gray-500 mt-2">ID Этапа: {{ stage.id }}</p>
+    </div>
+
+    <!-- Информационная карточка -->
+    <div class="bg-white shadow rounded-lg p-6 mb-6">
+        <h2 class="text-lg font-semibold text-gray-800 border-b pb-2 mb-4">Детали этапа</h2>
+        <div class="grid grid-cols-2 gap-4">
+            <div>
+                <p class="text-sm text-gray-500">Проект</p>
+                <p class="font-medium text-gray-900">{{ stage.project_id }}</p>
+            </div>
+            <div>
+                <p class="text-sm text-gray-500">Руководитель (менеджер)</p>
+                <p class="font-medium text-gray-900">{{ stage.project.manager.username }}</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Блок динамической подгрузки HTMX -->
+    {% include 'milestones/partials/readiness_card.html' %}
+
+</div>
+
+</body>
+</html>

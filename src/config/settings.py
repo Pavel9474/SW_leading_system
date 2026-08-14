@@ -28,6 +28,9 @@ INSTALLED_APPS = [
     'apps.assignments.apps.AssignmentsConfig',
     'apps.audit.apps.AuditConfig',
     'apps.reporting.apps.ReportingConfig',
+    'apps.documents',
+    'apps.orders',
+    'apps.milestones',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -51,7 +54,7 @@ ROOT_URLCONF = 'src.config.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'templates'], 
+        'DIRS': [os.path.join(BASE_DIR, 'templates')], 
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -133,3 +136,5 @@ CELERY_BEAT_SCHEDULE = {
         'schedule': crontab(hour=8, minute=0),
     },
 }
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')

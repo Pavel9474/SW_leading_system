@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from src.apps.audit.models import AuditLog
+from apps.audit.models import AuditLog
 from django.contrib.auth import get_user_model
 
 User = get_user_model()

@@ -2,7 +2,7 @@ from django.core.exceptions import ValidationError
 from django.db import transaction
 from src.apps.workflow.models import Output
 from src.apps.organization.models import Employee
-from src.apps.audit.services import log_action  # Импортируем наш сервис аудита
+from apps.audit.services import log_action  # Импортируем наш сервис аудита
 
 def start_output(*, actor: Employee, output: Output) -> Output:
     """Перевод Выхода из статуса 'Новый' в 'В работе' с записью аудита."""

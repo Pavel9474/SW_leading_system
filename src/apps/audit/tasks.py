@@ -1,5 +1,5 @@
 from celery import shared_task
-from src.apps.audit.models import AuditLog
+from apps.audit.models import AuditLog
 
 @shared_task(name="config.celery.async_write_audit_metadata")
 def async_write_audit_metadata(log_id: str, old_value: dict, new_value: dict):

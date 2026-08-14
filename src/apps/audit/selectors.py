@@ -1,7 +1,7 @@
 from datetime import datetime
 from typing import Optional
 from django.db.models import QuerySet, Q
-from src.apps.audit.models import AuditLog
+from apps.audit.models import AuditLog
 
 
 class AuditSelector:
