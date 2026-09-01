@@ -98,3 +98,10 @@ class AuditLog(models.Model):
 
     def __str__(self):
         return f"{self.created_at.strftime('%Y-%m-%d %H:%M:%S')} | {self.user} -> {self.action}"
+    class Meta:
+            db_table = 'audit_logs'
+            # Добавляем составной индекс для быстрого поиска логов по конкретному объекту
+            indexes = [
+                models.Index(fields=['content_type', 'object_id']),
+                models.Index(fields=['action', 'created_at']), # Дополнительный индекс для фильтрации по дате/типу
+            ]

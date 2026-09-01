@@ -8,14 +8,14 @@ def verify_stage_readiness(*, stage_id: str) -> dict:
     Агрегирует интегральный показатель готовности вехи/этапа.
     """
     # Все Выходы, относящиеся к задачам данного этапа
-    outputs = Output.objects.filter(task__stage_id=stage_id)
+    outputs = Output.objects.select_related('task').filter(task__stage_id=stage_id)
     
     # 1. Количество незавершенных Выходов
     uncompleted_outputs_count = outputs.exclude(status='completed').count()
     
     # 2. Количество незавершенных Поручений
     # Связываем Поручения (Order) с Выходами (Output) через ID
-    uncompleted_orders_count = Order.objects.filter(
+    uncompleted_orders_count = Order.objects.select_related('output', 'executor').filter(
         output_id__in=outputs.values_list('id', flat=True)
     ).exclude(status='completed').count()
     

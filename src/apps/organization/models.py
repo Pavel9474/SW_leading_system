@@ -96,9 +96,11 @@ class DepartmentMembership(models.Model):
     valid_to = models.DateField(blank=True, null=True, verbose_name="Действует по")
 
     class Meta:
-        db_table = 'department_memberships'
-        verbose_name = 'Принадлежность к подразделению'
-        verbose_name_plural = 'Принадлежности к подразделениям'
+            db_table = 'department_memberships'
+            # Составной индекс для селекторов дашборда и отчетов
+            indexes = [
+                models.Index(fields=['employee', 'department', 'is_primary']),
+            ]
 
     def __str__(self):
         return f"{self.employee} — {self.department} ({self.position})"

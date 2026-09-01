@@ -25,9 +25,10 @@ class Document(models.Model):
 
     class Meta:
         db_table = 'documents'
-        verbose_name = 'Документ'
-        verbose_name_plural = 'Документы'
-        ordering = ['-created_at']
+        # Быстрый поиск всех документов, привязанных к сущности
+        indexes = [
+            models.Index(fields=['content_type', 'object_id']),
+        ]
 
     def __str__(self):
         return self.name

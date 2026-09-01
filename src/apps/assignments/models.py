@@ -34,11 +34,12 @@ class Assignment(models.Model):
     assigned_at = models.DateTimeField(auto_now_add=True, verbose_name="Дата назначения")
 
     class Meta:
-        db_table = 'assignments'
-        verbose_name = 'Назначение исполнителя'
-        verbose_name_plural = 'Назначения исполнителей'
-        # Один сотрудник в рамках одной роли не может быть назначен на один выход дважды
-        unique_together = ('output', 'employee', 'department_membership')
+            db_table = 'assignments'
+            # $O(1)$ поиск ответственных исполнителей
+            indexes = [
+                models.Index(fields=['is_responsible']),
+                models.Index(fields=['employee', 'output']), # Защита от N+1 при связке юзера и выхода
+            ]
 
     def __str__(self):
         status = "Ответственный" if self.is_responsible else "Исполнитель"

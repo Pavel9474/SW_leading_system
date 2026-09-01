@@ -26,7 +26,8 @@ def get_dashboard_context(*, user) -> dict:
         orders_submitted = Order.objects.filter(issuer=user, status=Order.Status.SUBMITTED).count()
         outputs_submitted = Output.objects.filter(status='submitted').count()
         
-        critical_orders = Order.objects.filter(
+        critical_orders = Order.objects.select_related('issuer', 'executor', 'project'  # <--- Жадная загрузка связанных объектов
+        ).filter(
             issuer=user,
             status__in=[Order.Status.NEW, Order.Status.IN_PROGRESS, Order.Status.RETURNED]
         ).order_by('deadline')[:5]
@@ -44,7 +45,9 @@ def get_dashboard_context(*, user) -> dict:
             status__in=['in_progress', 'returned']
         ).count()
 
-        active_orders = Order.objects.filter(
+        active_orders = Order.objects.select_related(
+            'issuer', 'executor', 'project'  # <--- Жадная загрузка связанных объектов
+        ).filter(
             executor=user, 
             status__in=[Order.Status.NEW, Order.Status.IN_PROGRESS, Order.Status.RETURNED]
         ).order_by('deadline')
