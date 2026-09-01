@@ -1,6 +1,6 @@
 from django.shortcuts import render
-from src.apps.organization.models import Department
-from src.apps.reporting.selectors import get_department_load
+from apps.organization.models import Department
+from apps.reporting.selectors import get_department_load
 
 def department_load_page(request):
     """

@@ -1,7 +1,7 @@
 from django.db.models import Count, Q
-from src.apps.organization.models import Department
-from src.apps.assignments.models import Assignment
-from src.apps.workflow.models import Output
+from apps.organization.models import Department
+from apps.assignments.models import Assignment
+from apps.workflow.models import Output
 
 def get_department_load(*, department_id: str) -> dict:
     """

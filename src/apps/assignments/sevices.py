@@ -1,8 +1,8 @@
 from django.core.exceptions import ValidationError
 from django.db import transaction
-from src.apps.assignments.models import Assignment
-from src.apps.workflow.models import Output
-from src.apps.organization.models import Employee, DepartmentMembership
+from apps.assignments.models import Assignment
+from apps.workflow.models import Output
+from apps.organization.models import Employee, DepartmentMembership
 
 def assign_executor(
     *,

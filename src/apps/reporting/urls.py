@@ -1,5 +1,5 @@
 from django.urls import path
-from src.apps.reporting.views import department_load_page, department_load_fragment
+from apps.reporting.views import department_load_page, department_load_fragment
 
 app_name = 'reporting'
 

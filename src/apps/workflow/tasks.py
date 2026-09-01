@@ -1,7 +1,7 @@
 from celery import shared_task
 from django.utils import timezone
-from src.apps.workflow.models import Output
-from src.apps.assignments.models import Assignment
+from apps.workflow.models import Output
+from apps.assignments.models import Assignment
 
 @shared_task(name="config.celery.check_workflow_deadlines")
 def check_workflow_deadlines():

@@ -2,5 +2,5 @@ from django.apps import AppConfig
 
 class OrganizationConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
-    name = 'src.apps.organization'
-    verbose_name = 'Организационная структура'
+    name = 'apps.organization'  # <- Было ошибочно apps.projects
+    verbose_name = 'Организация'

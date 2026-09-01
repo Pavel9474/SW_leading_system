@@ -2,11 +2,11 @@ import uuid
 from django.core.management.base import BaseCommand
 from django.db import transaction
 from django.utils import timezone
-from src.apps.accounts.models import User
-from src.apps.organization.models import Employee, Department, Position, DepartmentMembership
-from src.apps.projects.models import Project
-from src.apps.workflow.models import Stage, Task, Output
-from src.apps.assignments.models import Assignment
+from apps.accounts.models import User
+from apps.organization.models import Employee, Department, Position, DepartmentMembership
+from apps.projects.models import Project
+from apps.workflow.models import Stage, Task, Output
+from apps.assignments.models import Assignment
 
 class Command(BaseCommand):
     help = 'Наполнение базы данных НИР начальными тестовыми данными v1.1'

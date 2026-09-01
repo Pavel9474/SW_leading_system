@@ -132,7 +132,7 @@ CELERY_BROKER_CONNECTION_RETRY_ON_STARTUP = True
 # Настройка планировщика фоновых задач (Celery Beat)
 CELERY_BEAT_SCHEDULE = {
     'check-deadlines-every-morning': {
-        'task': 'src.apps.workflow.tasks.check_workflow_deadlines',  # Указан корректный путь к таске
+        'task': 'fapps.workflow.tasks.check_workflow_deadlines',  # Указан корректный путь к таске
         'schedule': crontab(hour=8, minute=0),
     },
 }

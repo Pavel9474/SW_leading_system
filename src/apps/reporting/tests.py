@@ -1,11 +1,11 @@
 from django.test import TestCase
 from django.utils import timezone
-from src.apps.accounts.models import User
-from src.apps.organization.models import Employee, Department, Position, DepartmentMembership
-from src.apps.projects.models import Project
-from src.apps.workflow.models import Stage, Task, Output
-from src.apps.assignments.models import Assignment
-from src.apps.reporting.selectors import get_department_load
+from apps.accounts.models import User
+from apps.organization.models import Employee, Department, Position, DepartmentMembership
+from apps.projects.models import Project
+from apps.workflow.models import Stage, Task, Output
+from apps.assignments.models import Assignment
+from apps.reporting.selectors import get_department_load
 
 class DepartmentLoadSelectorTestCase(TestCase):
     """

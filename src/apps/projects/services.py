@@ -1,7 +1,7 @@
 from django.core.exceptions import ValidationError
 from django.db import transaction
-from src.apps.projects.models import Project
-from src.apps.organization.models import Employee
+from apps.projects.models import Project
+from apps.organization.models import Employee
 
 def create_project(
     *,
