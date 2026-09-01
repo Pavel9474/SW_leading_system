@@ -25,6 +25,7 @@ urlpatterns = [
     path('api/v1/', include('apps.audit.urls')),
     path('api/v1/', include('apps.documents.urls')),
     path('milestones/', include('apps.milestones.urls', namespace='milestones')),
+    path('', include('apps.dashboard.urls', namespace='dashboard')),
     
     # КЛЮЧЕВОЕ ИСПРАВЛЕНИЕ: перенаправление с главной страницы на мониторинг нагрузки
     path('', RedirectView.as_view(url='/reporting/department-load/', permanent=False)),

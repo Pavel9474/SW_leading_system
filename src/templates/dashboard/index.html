@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Центр управления НИР</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/htmx.org@1.9.10"></script>
+</head>
+<body class="bg-gray-100 min-h-screen p-8">
+
+<div class="max-w-7xl mx-auto">
+    <header class="mb-8 flex justify-between items-center">
+        <div>
+            <h1 class="text-3xl font-bold text-gray-900">Центр управления</h1>
+            <p class="text-gray-500 mt-1">Добро пожаловать, {{ user.get_full_name|default:user.username }}</p>
+        </div>
+        <span class="bg-indigo-100 text-indigo-800 px-3 py-1 rounded-full text-sm font-semibold">
+            {% if is_manager %}Руководитель{% else %}Исполнитель{% endif %}
+        </span>
+    </header>
+
+    {% if is_manager %}
+    <!-- ПАНЕЛЬ РУКОВОДИТЕЛЯ -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        <div class="bg-white rounded-lg shadow p-6 border-l-4 border-yellow-500">
+            <h3 class="text-gray-500 text-sm font-medium">Ожидают проверки (Поручения)</h3>
+            <p class="text-3xl font-bold text-gray-900 mt-2">{{ manager_metrics.orders_submitted }}</p>
+        </div>
+        <div class="bg-white rounded-lg shadow p-6 border-l-4 border-blue-500">
+            <h3 class="text-gray-500 text-sm font-medium">Ожидают проверки (Выходы)</h3>
+            <p class="text-3xl font-bold text-gray-900 mt-2">{{ manager_metrics.outputs_submitted }}</p>
+        </div>
+    </div>
+    
+    <!-- Lazy Loading тяжелого виджета -->
+    <div hx-get="{% url 'dashboard:lazy_department_load' %}" hx-trigger="load" class="bg-white rounded-lg shadow p-6 mb-8 min-h-[200px] flex items-center justify-center">
+        <span class="text-gray-400">Загрузка данных о нагрузке подразделений...</span>
+    </div>
+    {% else %}
+    <!-- ПАНЕЛЬ ИСПОЛНИТЕЛЯ -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        <div class="bg-white rounded-lg shadow p-6 border-l-4 border-green-500">
+            <h3 class="text-gray-500 text-sm font-medium">Активные выходы</h3>
+            <p class="text-3xl font-bold text-gray-900 mt-2">{{ executor_metrics.active_outputs_count }}</p>
+        </div>
+        <div class="bg-white rounded-lg shadow p-6 border-l-4 border-red-500">
+            <h3 class="text-gray-500 text-sm font-medium">Просроченные поручения</h3>
+            <p class="text-3xl font-bold text-red-600 mt-2">{{ executor_metrics.overdue_orders_count }}</p>
+        </div>
+    </div>
+    {% endif %}
+</div>
+
+</body>
+</html>
