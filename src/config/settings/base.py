@@ -31,6 +31,7 @@ INSTALLED_APPS = [
     'apps.orders',
     'apps.milestones',
     'apps.dashboard',
+    'apps.import_engine',
 ]
 
 MIDDLEWARE = [
