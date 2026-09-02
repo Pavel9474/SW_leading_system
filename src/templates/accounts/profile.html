@@ -1,0 +1,90 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto mt-8 px-4 sm:px-6 lg:px-8">
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        
+        <!-- Блок А: Кадровая карточка -->
+        <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200 h-fit">
+            <div class="border-b border-gray-100 pb-4 mb-4">
+                <h2 class="text-xl font-bold text-gray-900">{{ user.get_full_name|default:user.username }}</h2>
+                <p class="text-sm text-gray-500 mt-1">{{ user.email }}</p>
+            </div>
+            
+            <h3 class="text-sm font-semibold uppercase tracking-wider text-gray-500 mb-3">Кадровые привязки</h3>
+            <div class="space-y-3">
+                {% for membership in memberships %}
+                <div class="p-3 rounded-md border {% if membership.is_primary %}border-blue-300 bg-blue-50/60{% else %}border-gray-200 bg-gray-50{% endif %}">
+                    <p class="font-semibold text-gray-900 text-sm">{{ membership.department.name }}</p>
+                    <p class="text-xs text-gray-600 mt-0.5">{{ membership.position.name }}</p>
+                    <div class="mt-2">
+                        {% if membership.is_primary %}
+                            <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold bg-blue-600 text-white">Основное место</span>
+                        {% else %}
+                            <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-gray-200 text-gray-800">Совместительство</span>
+                        {% endif %}
+                    </div>
+                </div>
+                {% empty %}
+                <p class="text-sm text-gray-500 italic">Привязки к подразделениям не найдены.</p>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="lg:col-span-2 space-y-6">
+            <!-- Блок Б: Мои Выходы НИР -->
+            <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+                <h3 class="text-lg font-bold text-gray-900 mb-4">Мои результаты (Выходы НИР)</h3>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse text-sm">
+                        <thead>
+                            <tr class="border-b border-gray-200 bg-gray-50 text-gray-600">
+                                <th class="py-2.5 px-3 font-medium">Наименование</th>
+                                <th class="py-2.5 px-3 font-medium">Тип</th>
+                                <th class="py-2.5 px-3 font-medium">Дедлайн</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-100">
+                            {% for output in outputs %}
+                            <tr class="hover:bg-gray-50">
+                                <td class="py-2.5 px-3 text-gray-900">{{ output.name }}</td>
+                                <td class="py-2.5 px-3 text-gray-600">{{ output.output_type }}</td>
+                                <td class="py-2.5 px-3 font-mono text-red-600">{{ output.deadline|date:"d.m.Y" }}</td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="3" class="py-6 text-center text-gray-500 italic">Нет активных результатов НИР</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Блок В: Мои Поручения -->
+            <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+                <h3 class="text-lg font-bold text-gray-900 mb-4">Мои поручения (Задачи)</h3>
+                <div class="space-y-3">
+                    {% for task in tasks %}
+                    <div id="task-{{ task.id }}" class="flex items-center justify-between p-4 border border-gray-200 rounded-lg bg-gray-50">
+                        <div>
+                            <p class="font-medium text-gray-900">{{ task.title }}</p>
+                            <p class="text-xs text-gray-500 mt-0.5">Статус: {{ task.get_status_display }}</p>
+                        </div>
+                        <button hx-post="{% url 'tasks:submit' task.id %}" 
+                                hx-target="#task-{{ task.id }}" 
+                                hx-swap="outerHTML"
+                                class="bg-indigo-600 text-white text-xs font-semibold px-3 py-1.5 rounded hover:bg-indigo-700 transition">
+                            Отправить на проверку
+                        </button>
+                    </div>
+                    {% empty %}
+                    <p class="py-6 text-center text-gray-500 italic">Нет активных поручений</p>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+{% endblock %}

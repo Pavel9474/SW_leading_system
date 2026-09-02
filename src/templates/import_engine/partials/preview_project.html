@@ -1,0 +1,29 @@
+<form hx-post="{% url 'import_engine:confirm' %}" hx-swap="outerHTML">
+    {% csrf_token %}
+    <h2 class="text-xl font-bold mb-4">Предварительный просмотр реквизитов</h2>
+    
+    <div class="grid grid-cols-1 gap-4 mb-6">
+        {% for key, field in preview_data.project_fields.items %}
+        <div class="border p-4 rounded-lg bg-gray-50">
+            <label class="block text-sm font-semibold text-gray-700 uppercase">{{ key }}</label>
+            <div class="flex items-center gap-4 mt-1">
+                <input type="text" name="{{ key }}" value="{{ field.value|default:'' }}" 
+                       class="flex-1 border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                       {% if field.status == 'Не найдено' %}placeholder="Введите значение вручную"{% endif %}>
+                
+                <span class="px-3 py-1 text-xs font-bold rounded-full 
+                    {% if field.status == 'Распознано' %}bg-green-100 text-green-800
+                    {% elif field.status == 'Требует проверки' %}bg-yellow-100 text-yellow-800
+                    {% else %}bg-red-100 text-red-800{% endif %}">
+                    {{ field.status }}
+                </span>
+            </div>
+            <p class="text-xs text-gray-500 mt-1">Источник: {{ field.source }}</p>
+        </div>
+        {% endfor %}
+    </div>
+
+    <button type="submit" class="w-full bg-green-600 text-white font-bold px-4 py-3 rounded-lg hover:bg-green-700">
+        Подтвердить создание проекта
+    </button>
+</form>

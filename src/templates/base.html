@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Система управления НИР{% endblock %}</title>
+    
+    <!-- Tailwind CSS (CDN для быстрого старта) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- HTMX -->
+    <script src="https://unpkg.com/htmx.org@1.9.12"></script>
+
+    <style>
+        /* Стили индикатора HTMX: скрыт по умолчанию, виден при отправке запроса */
+        .htmx-indicator {
+            display: none;
+        }
+        .htmx-request .htmx-indicator,
+        .htmx-request.htmx-indicator {
+            display: inline-block;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 min-h-screen text-gray-900 flex flex-col">
+    <!-- Навигационная панель -->
+    <nav class="bg-white border-b border-gray-200 px-6 py-3 flex items-center justify-between shadow-sm">
+        <div class="flex items-center gap-6">
+            <span class="font-bold text-lg text-blue-700">ИС Управления НИР</span>
+            <a href="{% url 'import_engine:wizard' %}" class="text-sm font-medium text-gray-600 hover:text-blue-600">Импорт ТЗ</a>
+            {% if user.is_authenticated %}
+                <a href="{% url 'accounts:profile' %}" class="text-sm font-medium text-gray-600 hover:text-blue-600">Личный кабинет</a>
+            {% endif %}
+        </div>
+        <div>
+            {% if user.is_authenticated %}
+                <span class="text-sm text-gray-500 mr-3">{{ user.get_full_name|default:user.username }}</span>
+            {% endif %}
+        </div>
+    </nav>
+
+    <!-- Основное содержимое -->
+    <main class="flex-1">
+        {% block content %}
+        {% endblock %}
+    </main>
+</body>
+</html>

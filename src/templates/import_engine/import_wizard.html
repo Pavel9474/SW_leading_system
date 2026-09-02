@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto mt-10 p-6 bg-white rounded-lg shadow-md">
+    <h1 class="text-2xl font-bold mb-6">Мастер импорта ТЗ (Word)</h1>
+    
+    <form hx-post="{% url 'import_engine:preview' %}" 
+          hx-encoding="multipart/form-data" 
+          hx-target="#preview-container" 
+          hx-indicator="#loading-spinner">
+        {% csrf_token %}
+        <div class="mb-4">
+            <label class="block text-gray-700 font-bold mb-2">Загрузите документ .docx</label>
+            <input type="file" name="file" accept=".docx" class="block w-full border border-gray-300 rounded p-2" required>
+        </div>
+        <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Анализировать файл</button>
+        <span id="loading-spinner" class="htmx-indicator ml-4 text-blue-600">Парсинг документа...</span>
+    </form>
+
+    <div id="preview-container" class="mt-8"></div>
+</div>
+{% endblock %}

@@ -20,14 +20,14 @@ from django.views.generic import RedirectView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('accounts/', include('django.contrib.auth.urls')),
+    path('accounts/', include('apps.accounts.urls', namespace='accounts')),
     # Подключаем модуль отчетности
     path('reporting/', include('apps.reporting.urls', namespace='reporting')),
     path('api/v1/', include('apps.audit.urls')),
     path('api/v1/', include('apps.documents.urls')),
     path('milestones/', include('apps.milestones.urls', namespace='milestones')),
     path('', include('apps.dashboard.urls', namespace='dashboard')),
-    
+    path('import/', include('apps.import_engine.urls', namespace='import_engine')),
     
     # КЛЮЧЕВОЕ ИСПРАВЛЕНИЕ: перенаправление с главной страницы на мониторинг нагрузки
     path('', RedirectView.as_view(url='/reporting/department-load/', permanent=False)),
