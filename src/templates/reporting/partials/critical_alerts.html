@@ -1,0 +1,43 @@
+<div class="space-y-6">
+    <div>
+        <h3 class="text-xs font-bold uppercase tracking-wider text-red-600 mb-3">Просроченные сроки завершения</h3>
+        <div class="space-y-2">
+            {% for stage in overdue_stages %}
+            <div class="flex items-center justify-between p-3 rounded-lg border border-red-200 bg-red-50/40">
+                <div>
+                    <p class="text-sm font-bold text-gray-900">{{ stage.name }}</p>
+                    <p class="text-xs text-gray-500">Проект: {{ stage.project.name }}</p>
+                </div>
+                <div class="text-right">
+                    <span class="text-xs font-mono font-bold text-red-600 block">Дедлайн: {{ stage.end_date|date:"d.m.Y" }}</span>
+                    <span class="inline-block mt-1 px-2 py-0.5 text-[10px] font-bold bg-red-200 text-red-900 rounded">Просрочен</span>
+                </div>
+            </div>
+            {% empty %}
+            <p class="text-xs text-gray-500 italic p-3 bg-gray-50 rounded-lg">Просроченных этапов не обнаружено.</p>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div>
+        <h3 class="text-xs font-bold uppercase tracking-wider text-amber-600 mb-3">Зависшие назначения (> 7 дней)</h3>
+        <div class="space-y-2">
+            {% for item in stagnant_assignments %}
+            <div class="flex items-center justify-between p-3 rounded-lg border border-amber-200 bg-amber-50/40">
+                <div>
+                    <p class="text-sm font-bold text-gray-900">{{ item.output.name|default:"Выход НИР" }}</p>
+                    <p class="text-xs text-gray-500">
+                        Исполнитель: {{ item.employee.user.get_full_name|default:item.employee.user.username }}
+                    </p>
+                </div>
+                <div class="text-right">
+                    <span class="text-xs font-mono text-amber-700 font-bold block">Назначен: {{ item.assigned_at|date:"d.m.Y" }}</span>
+                    <span class="inline-block mt-1 px-2 py-0.5 text-[10px] font-bold bg-amber-200 text-amber-900 rounded">Требует контроля</span>
+                </div>
+            </div>
+            {% empty %}
+            <p class="text-xs text-gray-500 italic p-3 bg-gray-50 rounded-lg">Зависших назначений нет.</p>
+            {% endfor %}
+        </div>
+    </div>
+</div>

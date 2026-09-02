@@ -1,0 +1,100 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto mt-6 px-4 sm:px-6 lg:px-8 pb-12">
+    <!-- Заголовок страницы -->
+    <div class="flex flex-col md:flex-row md:items-center md:justify-between border-b border-gray-200 pb-4 mb-6">
+        <div>
+            <h1 class="text-2xl font-black text-gray-900 tracking-tight">Стратегический мониторинг НИР</h1>
+            <p class="text-sm text-gray-500 mt-1">Панель верхнеуровневого контроля института и лабораторий</p>
+        </div>
+        <div class="mt-4 md:mt-0 flex gap-3">
+            <a href="/reporting/department-load/" class="inline-flex items-center px-4 py-2 text-sm font-semibold rounded-lg shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 transition">
+                Загрузка подразделений →
+            </a>
+        </div>
+    </div>
+
+    <!-- Верхняя панель: KPI Cards -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+        <div class="bg-white p-5 rounded-xl border border-gray-200 shadow-sm">
+            <p class="text-xs font-bold uppercase tracking-wider text-gray-500">Проектов в работе</p>
+            <p class="text-3xl font-extrabold text-gray-900 mt-2">{{ total_projects }}</p>
+            <p class="text-xs text-green-600 mt-1">Активные НИР и ОКР</p>
+        </div>
+
+        <div class="bg-white p-5 rounded-xl border border-gray-200 shadow-sm" id="kpi-budget-card">
+            <p class="text-xs font-bold uppercase tracking-wider text-gray-500">Интегральный бюджет</p>
+            <div hx-get="{% url 'reporting:financial_overview' %}" hx-trigger="load" hx-target="#financial-overview-container" hx-indicator="#budget-spinner">
+                <span id="budget-spinner" class="htmx-indicator text-xs text-blue-600 mt-2 block">Расчет...</span>
+                <div id="kpi-budget-display" class="text-3xl font-extrabold text-blue-600 mt-2">—</div>
+            </div>
+            <p class="text-xs text-gray-500 mt-1">Гранты, госзадания, хозрасчет</p>
+        </div>
+
+        <div class="bg-white p-5 rounded-xl border border-gray-200 shadow-sm">
+            <p class="text-xs font-bold uppercase tracking-wider text-gray-500">Штат исследователей</p>
+            <p class="text-3xl font-extrabold text-gray-900 mt-2">{{ total_employees }}</p>
+            <p class="text-xs text-gray-500 mt-1">Основной персонал</p>
+        </div>
+
+        <div class="bg-white p-5 rounded-xl border border-gray-200 shadow-sm">
+            <p class="text-xs font-bold uppercase tracking-wider text-gray-500">Критические просрочки</p>
+            <p class="text-3xl font-extrabold {% if system_overdue_count > 0 %}text-red-600{% else %}text-gray-900{% endif %} mt-2">
+                {{ system_overdue_count }}
+            </p>
+            <p class="text-xs text-red-500 mt-1">Проекты и этапы вне графика</p>
+        </div>
+    </div>
+
+    <!-- Основная сетка: Ленивая загрузка виджетов -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <!-- Левая колонка: Финансовые потоки -->
+        <div class="lg:col-span-1 space-y-6">
+            <div class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
+                <h2 class="text-lg font-bold text-gray-900 mb-4">Финансовое обеспечение</h2>
+                <div id="financial-overview-container">
+                    <div class="flex items-center justify-center py-12 text-sm text-gray-400">
+                        <span class="inline-block animate-pulse">Загрузка структуры финансирования...</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Блок подразделений института -->
+            <div class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
+                <h2 class="text-lg font-bold text-gray-900 mb-3">Оргструктура института</h2>
+                <p class="text-xs text-gray-500 mb-4">Быстрый переход к мониторингу загрузки лабораторий</p>
+                <div class="space-y-2 max-h-60 overflow-y-auto pr-1">
+                    {% for dept in departments %}
+                    <a href="/reporting/department-load/?dept_id={{ dept.id }}" class="flex items-center justify-between p-2 rounded-lg hover:bg-gray-50 border border-transparent hover:border-gray-200 text-sm">
+                        <span class="text-gray-800 font-medium truncate">{{ dept.name }}</span>
+                        <span class="text-indigo-600 text-xs font-bold">Детали →</span>
+                    </a>
+                    {% empty %}
+                    <p class="text-xs text-gray-400 italic">Подразделения не зарегистрированы</p>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Правая колонка: Панель системных рисков -->
+        <div class="lg:col-span-2">
+            <div class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
+                <div class="flex items-center justify-between mb-4">
+                    <h2 class="text-lg font-bold text-gray-900">Системные алерты и риски</h2>
+                    <span class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-red-100 text-red-800">High Priority</span>
+                </div>
+
+                <!-- HTMX Ленивая загрузка панели рисков -->
+                <div hx-get="{% url 'reporting:critical_alerts' %}" 
+                     hx-trigger="load" 
+                     hx-swap="innerHTML">
+                    <div class="flex items-center justify-center py-16 text-sm text-gray-400">
+                        <span class="inline-block animate-pulse">Сканирование базы данных на скрытые задержки...</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

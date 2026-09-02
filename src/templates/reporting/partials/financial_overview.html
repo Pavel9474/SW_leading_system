@@ -1,0 +1,35 @@
+<div class="space-y-4">
+    <div class="p-4 bg-blue-50 border border-blue-100 rounded-lg">
+        <p class="text-xs font-bold text-blue-700 uppercase">Всего проектов в портфеле</p>
+        <p class="text-2xl font-black text-blue-900 mt-1">{{ total_projects_count }} ед.</p>
+    </div>
+
+    <div class="space-y-3">
+        {% for item in finance_breakdown %}
+        <div class="border border-gray-100 p-3 rounded-lg bg-gray-50/50">
+            <div class="flex justify-between items-center text-sm mb-1">
+                <span class="font-semibold text-gray-800">{{ item.contract_type }}</span>
+                <span class="font-mono text-gray-900 font-bold">{{ item.count }} шт.</span>
+            </div>
+            <div class="w-full bg-gray-200 rounded-full h-1.5 overflow-hidden">
+                <div class="bg-blue-600 h-1.5 rounded-full" style="width: {{ item.percentage }}%;"></div>
+            </div>
+            <div class="flex justify-between text-xs text-gray-400 mt-1">
+                <span>Доля портфеля</span>
+                <span>{{ item.percentage }}%</span>
+            </div>
+        </div>
+        {% empty %}
+        <p class="text-sm text-gray-400 italic">Данные по типам проектов отсутствуют</p>
+        {% endfor %}
+    </div>
+</div>
+
+<script>
+    (function() {
+        const display = document.getElementById('kpi-budget-display');
+        if (display) {
+            display.innerText = '{{ total_projects_count }} шт.';
+        }
+    })();
+</script>
