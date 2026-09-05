@@ -1,0 +1,16 @@
+<tr id="output-{{ output.id }}" class="hover:bg-gray-50">
+    <td class="py-2.5 px-3 text-gray-900 font-medium">{{ output.name }}</td>
+    <td class="py-2.5 px-3 font-mono text-red-600">{{ output.deadline|date:"d.m.Y"|default:"—" }}</td>
+    <td class="py-2.5 px-3 text-right">
+        {% if output.status == 'submitted' %}
+            <span class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold bg-amber-100 text-amber-800">На проверке</span>
+        {% else %}
+            <!-- Кнопка вызывает модалку и помещает её в #dialog-container -->
+            <button hx-get="{% url 'accounts:attach_output_modal' output.id %}" 
+                    hx-target="#dialog-container"
+                    class="bg-white border border-gray-300 text-gray-700 text-xs font-semibold px-3 py-1.5 rounded hover:bg-gray-50 transition shadow-sm">
+                Прикрепить результат
+            </button>
+        {% endif %}
+    </td>
+</tr>

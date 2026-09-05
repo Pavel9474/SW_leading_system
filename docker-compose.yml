@@ -34,7 +34,8 @@ services:
     env_file:
       - .env
     environment:
-      - PYTHONPATH=/app
+      - PYTHONPATH=/app/src
+      - DJANGO_SETTINGS_MODULE=config.settings.local
     volumes:
       - ./src:/app/src
       - static_volume:/app/src/staticfiles
@@ -56,7 +57,8 @@ services:
     env_file:
       - .env
     environment:
-      - PYTHONPATH=/app
+      - PYTHONPATH=/app/src
+      - DJANGO_SETTINGS_MODULE=config.settings.local
     volumes:
       - ./src:/app/src
       - static_volume:/app/src/staticfiles
@@ -78,10 +80,11 @@ services:
       ports:
         - "5555:5555"
       environment:
-        - PYTHONPATH=/app
+        - PYTHONPATH=/app/src
         - CELERY_BROKER_URL=redis://redis:6379/0
         - DATABASE_URL=postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}
         - REDIS_URL=redis://redis:6379/0
+        - DJANGO_SETTINGS_MODULE=config.settings.local
       volumes:
         - ./src:/app/src
       depends_on:

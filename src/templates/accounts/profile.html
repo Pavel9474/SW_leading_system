@@ -40,21 +40,15 @@
                         <thead>
                             <tr class="border-b border-gray-200 bg-gray-50 text-gray-600">
                                 <th class="py-2.5 px-3 font-medium">Наименование</th>
-                                <th class="py-2.5 px-3 font-medium">Тип</th>
                                 <th class="py-2.5 px-3 font-medium">Дедлайн</th>
+                                <th class="py-2.5 px-3 font-medium text-right">Действие</th>
                             </tr>
                         </thead>
                         <tbody class="divide-y divide-gray-100">
                             {% for output in outputs %}
-                            <tr class="hover:bg-gray-50">
-                                <td class="py-2.5 px-3 text-gray-900">{{ output.name }}</td>
-                                <td class="py-2.5 px-3 text-gray-600">{{ output.output_type }}</td>
-                                <td class="py-2.5 px-3 font-mono text-red-600">{{ output.deadline|date:"d.m.Y" }}</td>
-                            </tr>
+                                {% include 'accounts/partials/output_row.html' %}
                             {% empty %}
-                            <tr>
-                                <td colspan="3" class="py-6 text-center text-gray-500 italic">Нет активных результатов НИР</td>
-                            </tr>
+                                <tr><td colspan="3" class="py-6 text-center text-gray-500 italic">Нет активных результатов НИР</td></tr>
                             {% endfor %}
                         </tbody>
                     </table>
@@ -63,28 +57,22 @@
 
             <!-- Блок В: Мои Поручения -->
             <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
-                <h3 class="text-lg font-bold text-gray-900 mb-4">Мои поручения (Задачи)</h3>
-                <div class="space-y-3">
-                    {% for task in tasks %}
-                    <div id="task-{{ task.id }}" class="flex items-center justify-between p-4 border border-gray-200 rounded-lg bg-gray-50">
-                        <div>
-                            <p class="font-medium text-gray-900">{{ task.title }}</p>
-                            <p class="text-xs text-gray-500 mt-0.5">Статус: {{ task.get_status_display }}</p>
+                            <h3 class="text-lg font-bold text-gray-900 mb-4">Мои поручения (Задачи)</h3>
+                            <div class="space-y-3">
+                                {% for task in tasks %}
+                                    {% include 'accounts/partials/order_row.html' %}
+                                {% empty %}
+                                    <p class="py-6 text-center text-gray-500 italic">Нет активных поручений</p>
+                                {% endfor %}
+                            </div>
                         </div>
-                        <button hx-post="{% url 'tasks:submit' task.id %}" 
-                                hx-target="#task-{{ task.id }}" 
-                                hx-swap="outerHTML"
-                                class="bg-indigo-600 text-white text-xs font-semibold px-3 py-1.5 rounded hover:bg-indigo-700 transition">
-                            Отправить на проверку
-                        </button>
                     </div>
-                    {% empty %}
-                    <p class="py-6 text-center text-gray-500 italic">Нет активных поручений</p>
-                    {% endfor %}
                 </div>
             </div>
         </div>
 
     </div>
 </div>
+<!-- Контейнер для модальных окон -->
+<div id="dialog-container"></div>
 {% endblock %}
